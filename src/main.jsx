@@ -115,8 +115,7 @@ function App() {
       <header className="topbar">
         <a className="logo" href="#top" onClick={closeMenu} aria-label="Lohith D home">LD<span>.</span></a>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="navigation">
-          <span></span><span></span>
-          <span className="sr-only">Toggle navigation</span>
+          <span>Menu</span><span className="menu-chevron" aria-hidden="true">⌄</span>
         </button>
         <nav id="navigation" className={menuOpen ? 'nav-links open' : 'nav-links'}>
           <a href="#work" onClick={closeMenu}>Work</a>
