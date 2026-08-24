@@ -62,28 +62,7 @@ function InstagramIcon() {
 }
 
 function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setSubmitted(false);
-    setSubmitError(false);
-
-    try {
-      const response = await fetch('https://formsubmit.co/ajax/happydeath2004@gmail.com', {
-        method: 'POST',
-        body: new FormData(event.currentTarget),
-        headers: { Accept: 'application/json' }
-      });
-
-      if (!response.ok) throw new Error('Form submission failed');
-      event.currentTarget.reset();
-      setSubmitted(true);
-    } catch {
-      setSubmitError(true);
-    }
-  };
+  const submitted = new URLSearchParams(window.location.search).get('submitted') === 'true';
 
   return (
     <div className="contact-page">
@@ -97,17 +76,17 @@ function ContactPage() {
           <h1>Tell me about<br /><em>your project.</em></h1>
           <p className="contact-note">Share a few details and I’ll get back to you with the next steps.</p>
         </div>
-        <form className="brief-form" onSubmit={handleSubmit}>
+        <form className="brief-form" action="https://formsubmit.co/happydeath2004@gmail.com" method="POST">
           <input type="hidden" name="_subject" value="New portfolio project enquiry" />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value="https://lohith0223.github.io/lohith-portfolio/?submitted=true#contact-form" />
           <label>What’s your name<input name="name" type="text" placeholder="Your name" required /></label>
           <label>Email address<input name="email" type="email" placeholder="you@example.com" required /></label>
           <label>What do you need help with?<select name="projectType" defaultValue="" required><option value="" disabled>Select a project type</option><option>Video editing & motion</option><option>Branding & social content</option><option>Frontend development</option><option>Something else</option></select></label>
           <label>Tell me about the work<textarea name="message" rows="5" placeholder="What are you building, and what would you like this project to achieve?" required /></label>
           <button className="submit-button" type="submit">Send project brief <ArrowIcon /></button>
           {submitted && <p className="form-success" role="status">Thanks, your brief is ready to talk through. I’ll be in touch soon.</p>}
-          {submitError && <p className="form-error" role="alert">Something went wrong. Please email me directly at happydeath2004@gmail.com.</p>}
         </form>
       </main>
       <footer><span>© {new Date().getFullYear()} Lohith D</span><span>happydeath2004@gmail.com</span></footer>
