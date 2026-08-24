@@ -63,19 +63,26 @@ function InstagramIcon() {
 
 function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const projectType = formData.get('projectType');
-    const message = formData.get('message');
-    const subject = `Project enquiry from ${name}`;
-    const body = `Name: ${name}\nEmail: ${email}\nProject type: ${projectType}\n\nAbout the work:\n${message}`;
+    setSubmitted(false);
+    setSubmitError(false);
 
-    window.location.href = `mailto:happydeath2004@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSubmitted(true);
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/happydeath2004@gmail.com', {
+        method: 'POST',
+        body: new FormData(event.currentTarget),
+        headers: { Accept: 'application/json' }
+      });
+
+      if (!response.ok) throw new Error('Form submission failed');
+      event.currentTarget.reset();
+      setSubmitted(true);
+    } catch {
+      setSubmitError(true);
+    }
   };
 
   return (
@@ -91,12 +98,16 @@ function ContactPage() {
           <p className="contact-note">Share a few details and I’ll get back to you with the next steps.</p>
         </div>
         <form className="brief-form" onSubmit={handleSubmit}>
+          <input type="hidden" name="_subject" value="New portfolio project enquiry" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
           <label>What’s your name<input name="name" type="text" placeholder="Your name" required /></label>
           <label>Email address<input name="email" type="email" placeholder="you@example.com" required /></label>
           <label>What do you need help with?<select name="projectType" defaultValue="" required><option value="" disabled>Select a project type</option><option>Video editing & motion</option><option>Branding & social content</option><option>Frontend development</option><option>Something else</option></select></label>
           <label>Tell me about the work<textarea name="message" rows="5" placeholder="What are you building, and what would you like this project to achieve?" required /></label>
           <button className="submit-button" type="submit">Send project brief <ArrowIcon /></button>
           {submitted && <p className="form-success" role="status">Thanks, your brief is ready to talk through. I’ll be in touch soon.</p>}
+          {submitError && <p className="form-error" role="alert">Something went wrong. Please email me directly at happydeath2004@gmail.com.</p>}
         </form>
       </main>
       <footer><span>© {new Date().getFullYear()} Lohith D</span><span>happydeath2004@gmail.com</span></footer>
