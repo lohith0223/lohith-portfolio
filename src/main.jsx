@@ -83,7 +83,7 @@ function ContactPage() {
           <input type="hidden" name="_next" value="https://lohith0223.github.io/lohith-portfolio/?submitted=true#contact-form" />
           <label>What’s your name<input name="name" type="text" placeholder="Your name" required /></label>
           <label>Email address<input name="email" type="email" placeholder="you@example.com" required /></label>
-          <label>What do you need help with?<select name="projectType" defaultValue="" required><option value="" disabled>Select a project type</option><option>Video editing & motion</option><option>Branding & social content</option><option>Frontend development</option><option>Something else</option></select></label>
+          <label>What do you need help with?<select name="projectType" defaultValue="" required><option value="" disabled>Select a project type</option><option>Video editing & motion</option><option>Videography</option><option>Photography</option><option>Branding & social content</option><option>Frontend development</option><option>Something else</option></select></label>
           <label>Tell me about the work<textarea name="message" rows="5" placeholder="What are you building, and what would you like this project to achieve?" required /></label>
           <button className="submit-button" type="submit">Send project brief <ArrowIcon /></button>
           {submitted && <p className="form-success" role="status">Thanks, your brief is ready to talk through. I’ll be in touch soon.</p>}
