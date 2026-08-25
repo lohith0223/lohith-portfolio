@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import portraitImage from './assets/lohith-portrait.jpg';
@@ -74,6 +74,94 @@ function LinkedInIcon() {
 
 function InstagramIcon() {
   return <svg className="social-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" /><circle cx="12" cy="12" r="4" /><path d="M17.6 6.7h.01" /></svg>;
+}
+
+function CanvasBackdrop() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    const pointer = { x: -1000, y: -1000 };
+    const nodes = [];
+    let animationFrame;
+    let width = 0;
+    let height = 0;
+
+    const resize = () => {
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * pixelRatio;
+      canvas.height = height * pixelRatio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      nodes.length = 0;
+      const spacing = width < 600 ? 74 : 92;
+      for (let y = spacing / 2; y < height + spacing; y += spacing) {
+        for (let x = spacing / 2; x < width + spacing; x += spacing) {
+          nodes.push({ x, y, homeX: x, homeY: y, vx: 0, vy: 0 });
+        }
+      }
+    };
+
+    const move = (event) => { pointer.x = event.clientX; pointer.y = event.clientY; };
+    const draw = () => {
+      context.clearRect(0, 0, width, height);
+      nodes.forEach((node) => {
+        const dx = node.x - pointer.x;
+        const dy = node.y - pointer.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance < 170) {
+          const force = (170 - distance) / 170;
+          node.vx += (dx / (distance || 1)) * force * 0.9;
+          node.vy += (dy / (distance || 1)) * force * 0.9;
+        }
+        node.vx += (node.homeX - node.x) * 0.012;
+        node.vy += (node.homeY - node.y) * 0.012;
+        node.vx *= 0.88;
+        node.vy *= 0.88;
+        node.x += node.vx;
+        node.y += node.vy;
+        const glow = Math.max(0, 1 - distance / 180);
+        context.fillStyle = `rgba(0, 242, 254, ${0.12 + glow * 0.5})`;
+        context.beginPath();
+        context.arc(node.x, node.y, 1.1 + glow * 1.8, 0, Math.PI * 2);
+        context.fill();
+      });
+      animationFrame = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', move);
+    return () => { cancelAnimationFrame(animationFrame); window.removeEventListener('resize', resize); window.removeEventListener('pointermove', move); };
+  }, []);
+
+  return <canvas className="canvas-backdrop" ref={canvasRef} aria-hidden="true" />;
+}
+
+function InteractiveEffects() {
+  useEffect(() => {
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-orb';
+    document.body.appendChild(cursor);
+    let x = -100;
+    let y = -100;
+    let targetX = x;
+    let targetY = y;
+    let frame;
+    const move = (event) => { targetX = event.clientX; targetY = event.clientY; };
+    const render = () => { x += (targetX - x) * 0.18; y += (targetY - y) * 0.18; cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`; frame = requestAnimationFrame(render); };
+    const click = (event) => { const ripple = document.createElement('span'); ripple.className = 'click-ripple'; ripple.style.left = `${event.clientX}px`; ripple.style.top = `${event.clientY}px`; document.body.appendChild(ripple); ripple.addEventListener('animationend', () => ripple.remove()); };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('click', click);
+    render();
+    return () => { cancelAnimationFrame(frame); window.removeEventListener('pointermove', move); window.removeEventListener('click', click); cursor.remove(); };
+  }, []);
+  return null;
 }
 
 function ContactPage() {
@@ -241,4 +329,67 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+function CreativeApp() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
+  const [contactPage, setContactPage] = useState(window.location.hash === '#contact-form');
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  useEffect(() => {
+    const tiltCards = [...document.querySelectorAll('[data-tilt]')];
+    const handlers = tiltCards.map((card) => {
+      const move = (event) => { const rect = card.getBoundingClientRect(); const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -6; const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 6; card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`; };
+      const leave = () => { card.style.transform = ''; };
+      card.addEventListener('pointermove', move); card.addEventListener('pointerleave', leave);
+      return () => { card.removeEventListener('pointermove', move); card.removeEventListener('pointerleave', leave); };
+    });
+    return () => handlers.forEach((cleanup) => cleanup());
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => setContactPage(window.location.hash === '#contact-form');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  if (contactPage) return <ContactPage />;
+
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <div className="creative-shell">
+      <CanvasBackdrop />
+      <InteractiveEffects />
+      <header className="creative-nav">
+        <a className="creative-logo" href="#top" onClick={closeMenu}>LD<span>_</span></a>
+        <span className="nav-status"><i /> Available for opportunities</span>
+        <button className="creative-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="creative-navigation">{menuOpen ? 'Close' : 'Menu'} <b>{menuOpen ? '×' : '↗'}</b></button>
+        <nav id="creative-navigation" className={menuOpen ? 'creative-links is-open' : 'creative-links'}>
+          <a href="#work" onClick={closeMenu}>01 / Work</a><a href="#about" onClick={closeMenu}>02 / About</a><a href="#skills" onClick={closeMenu}>03 / Skills</a><a href="#experience" onClick={closeMenu}>04 / Experience</a><a href="#contact" onClick={closeMenu}>05 / Contact</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section className="creative-hero">
+          <div className="hero-kicker"><span>Creative developer / 2026</span><span>Based in Bengaluru, India</span></div>
+          <div className="hero-grid"><div><p className="hero-label">Designing the feeling between <span>the frame</span> and the interface.</p><h1>Lohith <em>D.</em></h1><p className="hero-title">UI/UX designer, content creator<br />&amp; editor.</p></div><div className="hero-orbit"><span className="orbit-ring ring-one" /><span className="orbit-ring ring-two" /><span className="orbit-core">LD<span>+</span></span><span className="orbit-label">01 — 03<br />MAKE / MOVE / MATTER</span></div></div>
+          <div className="hero-bottom"><p>Visual systems, moving images,<br />and interfaces with a pulse.</p><div className="hero-cta-row"><a className="neon-button" href="#work">Explore work <ArrowIcon /></a><a className="ghost-button" href={resumePdf} target="_blank" rel="noreferrer">Resume <ArrowIcon /></a></div></div>
+        </section>
+
+        <section className="creative-section work-section" id="work"><div className="section-intro"><span className="section-index">01 / SELECTED WORK</span><h2>Built to be<br /><em>felt.</em></h2><p>Selected work across creative media, frontend design, and systems thinking.</p></div><div className="creative-project-grid">{projects.map((project, index) => <article className={`creative-project project-${index + 1}`} data-tilt key={project.number}><div className="project-meta"><span>{project.number}</span><span>{project.category}</span></div><div className="project-poster"><span className="poster-grid">{project.visualLabel}</span><strong>{project.title}</strong><i>{index === 0 ? 'MEDIA' : index === 1 ? 'API' : 'SYSTEM'}</i></div><div className="project-info"><div><h3>{project.title}</h3><p>{project.description}</p></div><button onClick={() => setActiveProject(project)} aria-label={`View ${project.title} details`}>↗</button></div></article>)}</div></section>
+
+        <section className="creative-section about-section" id="about"><div className="section-intro"><span className="section-index">02 / THE PERSON</span><h2>More than<br /><em>a title.</em></h2></div><div className="about-bento"><div className="about-copy"><span className="bento-tag">LOHITH D / 2026</span><p>I work across the space where visual storytelling meets digital craft. From a cut of music to a considered interaction, I like making work that feels clear, curious, and alive.</p><a href="#contact">Let’s make something <ArrowIcon /></a></div><div className="about-stat"><strong>30<span>+</span></strong><span>promotional videos,<br />reels &amp; creatives</span></div><div className="about-photo"><img src={portraitImage} alt="Lohith D smiling" loading="lazy" /><span>Based in<br />Bengaluru ↗</span></div></div></section>
+
+        <section className="creative-section skills-section" id="skills"><div className="section-intro"><span className="section-index">03 / THE TOOLKIT</span><h2>Tools for<br /><em>the next frame.</em></h2></div><div className="creative-skills">{skills.map((skill) => <div className="creative-skill" data-tilt key={skill.name}><div className={`creative-app-icon ${skill.className}`}><span>{skill.shortName}</span></div><div><h3>{skill.name}</h3><p>{skill.group} / CREATIVE STACK</p></div><span className="skill-arrow">↗</span></div>)}</div></section>
+
+        <section className="creative-section experience-section" id="experience"><div className="section-intro"><span className="section-index">04 / EXPERIENCE</span><h2>In the<br /><em>field.</em></h2></div><div className="creative-timeline"><div className="timeline-row"><span>2024—25</span><div><h3>Creative Media Editor &amp; Program Coordinator</h3><p>BGS College · MBA Department</p></div><p>Video, social content, posters, branding, and event materials across an 11-month engagement.</p></div><div className="timeline-row"><span>2025</span><div><h3>Frontend Developer Intern</h3><p>Doctor Java Technologies</p></div><p>Built Meal Finder, a responsive recipe discovery experience powered by live API data.</p></div></div></section>
+
+        <section className="creative-contact" id="contact"><span className="section-index">05 / START A PROJECT</span><h2>Have a good<br /><em>idea?</em></h2><p>Let’s give it a sharp point of view.</p><div className="contact-actions"><a className="neon-button" href="#contact-form">Get in touch <ArrowIcon /></a><button className="ghost-button copy-email" onClick={() => { navigator.clipboard.writeText('happydeath2004@gmail.com'); setEmailCopied(true); }}> {emailCopied ? 'Email copied' : 'Copy email'} ↗</button></div><div className="contact-links"><a href={linkedinUrl} target="_blank" rel="noreferrer">LinkedIn ↗</a><a href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a><a href={driveUrl} target="_blank" rel="noreferrer">Drive ↗</a></div></section>
+      </main>
+      <footer className="creative-footer"><span>© {new Date().getFullYear()} Lohith D</span><span>Made with intention / Bengaluru</span><a href="mailto:happydeath2004@gmail.com">happydeath2004@gmail.com ↗</a></footer>
+      {activeProject && <div className="creative-modal-backdrop" onClick={() => setActiveProject(null)}><section className={`creative-modal project-${activeProject.number}`} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="creative-modal-title"><button onClick={() => setActiveProject(null)} aria-label="Close project details">×</button><span className="section-index">CASE STUDY / {activeProject.number}</span><h2 id="creative-modal-title">{activeProject.title}</h2><p>{activeProject.details}</p><strong>{activeProject.tools}</strong></section></div>}
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<CreativeApp />);
