@@ -13,7 +13,9 @@ const projects = [
     description: '30+ promotional videos, reels, posters, and branding assets for the MBA Department.',
     role: 'Creative Media Editor & Program Coordinator',
     tools: 'Premiere Pro, After Effects, Illustrator, Canva',
-    details: 'Created promotional videos, reels, posters, social media creatives, and event materials that strengthened the department’s digital engagement.'
+    details: 'Created promotional videos, reels, posters, social media creatives, and event materials for the MBA Department at BGS College.',
+    result: '30+ pieces of content across video, design, and event communication.',
+    visualLabel: 'Video · Motion · Brand'
   },
   {
     number: '02',
@@ -23,7 +25,9 @@ const projects = [
     description: 'A responsive meal discovery experience with search, filters, recipe details, and live API data.',
     role: 'Frontend Developer Intern · Doctor Java Technologies',
     tools: 'HTML, CSS, JavaScript, REST API',
-    details: 'Built an interactive meal discovery site with real-time API data, keyword search, category filters, recipe details, and a responsive interface.'
+    details: 'Built an interactive meal discovery site with real-time API data, keyword search, category filters, recipe details, and a responsive interface.',
+    result: 'A focused, responsive recipe discovery flow.',
+    visualLabel: 'Search · API · UI'
   },
   {
     number: '03',
@@ -33,8 +37,19 @@ const projects = [
     description: 'A Django and MySQL library platform with secure roles, book tracking, and smart search.',
     role: 'Final Year Project',
     tools: 'Python, Django, MySQL, JavaScript, jQuery',
-    details: 'Developed separate student and admin modules with secure sign-in, book management, issue and return tracking, fine calculation, and real-time search.'
+    details: 'Developed separate student and admin modules with secure sign-in, book management, issue and return tracking, fine calculation, and real-time search.',
+    result: 'A complete academic project with role-based workflows.',
+    visualLabel: 'Django · MySQL · Systems'
   }
+];
+
+const skills = [
+  { name: 'Adobe Illustrator', shortName: 'Ai', className: 'illustrator', group: 'Design' },
+  { name: 'Adobe Premiere Pro', shortName: 'Pr', className: 'premiere', group: 'Edit' },
+  { name: 'Adobe After Effects', shortName: 'Ae', className: 'after-effects', group: 'Motion' },
+  { name: 'Adobe Lightroom', shortName: 'Lr', className: 'lightroom', group: 'Photo' },
+  { name: 'Canva', shortName: 'Ca', className: 'canva', group: 'Design' },
+  { name: 'CapCut', shortName: 'Cc', className: 'capcut', group: 'Edit' }
 ];
 
 const driveUrl = 'https://drive.google.com/drive/folders/18gswzzOMhOCAbSjmwK8qySJMl0GFQT3S?usp=sharing';
@@ -119,24 +134,22 @@ function App() {
         </button>
         <nav id="navigation" className={menuOpen ? 'nav-links open' : 'nav-links'}>
           <a href="#work" onClick={closeMenu}>Work</a>
-          <a className="nav-drive" href={driveUrl} target="_blank" rel="noreferrer" onClick={closeMenu}><DriveIcon /> Drive</a>
-          <a className="nav-social" href={linkedinUrl} target="_blank" rel="noreferrer" onClick={closeMenu}><LinkedInIcon /> LinkedIn</a>
-          <a className="nav-social" href={instagramUrl} target="_blank" rel="noreferrer" onClick={closeMenu}><InstagramIcon /> Instagram</a>
-          <a href={resumePdf} target="_blank" rel="noreferrer" onClick={closeMenu}>Resume</a>
           <a href="#about" onClick={closeMenu}>About</a>
+          <a href="#experience" onClick={closeMenu}>Experience</a>
+          <a href={resumePdf} target="_blank" rel="noreferrer" onClick={closeMenu}>Resume</a>
           <a href="#contact-form" onClick={closeMenu}>Contact</a>
         </nav>
       </header>
 
       <main id="top">
         <section className="hero" aria-labelledby="intro-heading">
-          <div className="hero-meta"><p className="eyebrow">Creative media editor & frontend developer</p><span className="availability"><i></i> Available for opportunities</span></div>
-          <h1 id="intro-heading">I turn ideas into<br /><em>stories</em> that move.</h1>
+          <div className="hero-meta"><p className="eyebrow">Bengaluru · India</p><span className="availability"><i></i> Available for opportunities</span></div>
+          <h1 id="intro-heading">Lohith D —<br /><em>UI/UX Designer,</em><br />Content Creator & Editor.</h1>
           <div className="hero-footer">
-            <p>Based in Bengaluru, Karnataka.<br />Available for creative collaborations.</p>
+            <p>I design clear interfaces, create visual stories,<br />and edit work with rhythm and intention.</p>
             <div className="hero-actions">
-              <a className="drive-button" href={driveUrl} target="_blank" rel="noreferrer"><DriveIcon /> View work on Drive</a>
-              <a className="circle-link" href="#work" aria-label="Jump to selected work"><ArrowIcon /></a>
+              <a className="primary-button" href="#work">View work <ArrowIcon /></a>
+              <a className="secondary-button" href={resumePdf} target="_blank" rel="noreferrer">Download resume <ArrowIcon /></a>
             </div>
           </div>
         </section>
@@ -144,16 +157,16 @@ function App() {
         <section className="work section" id="work" aria-labelledby="work-heading">
           <div className="section-heading">
             <p className="eyebrow">Selected work</p>
-            <h2 id="work-heading">Creative work,<br />made to connect.</h2>
+            <h2 id="work-heading">Selected work,<br /><em>with intent.</em></h2>
           </div>
           <div className="project-grid">
             {projects.map((project) => (
               <article className={`project-card ${project.accent}`} key={project.number}>
                 <div className="card-top"><span>{project.number}</span><span>{project.category}</span></div>
-                <div className="project-art" aria-hidden="true">
-                  <div className="art-shape shape-one"></div>
-                  <div className="art-shape shape-two"></div>
-                  <div className="art-word">{project.title.split(' ')[0]}</div>
+                <div className="project-art project-visual">
+                  <span className="visual-index">CASE STUDY / {project.number}</span>
+                  <strong>{project.title}</strong>
+                  <span className="visual-label">{project.visualLabel}</span>
                 </div>
                 <div className="card-bottom">
                   <div><h3>{project.title}</h3><p>{project.description}</p></div>
@@ -162,6 +175,30 @@ function App() {
               </article>
             ))}
           </div>
+          <div className="work-note"><span>Full archive</span><a href={driveUrl} target="_blank" rel="noreferrer">Browse the visual work on Drive <ArrowIcon /></a></div>
+        </section>
+
+        <section className="capabilities section" aria-labelledby="capabilities-heading">
+          <div className="section-heading"><p className="eyebrow">What I bring</p><h2 id="capabilities-heading">A hybrid<br /><em>toolkit.</em></h2></div>
+          <div className="capability-list"><div><span>01</span><h3>UI/UX design</h3><p>Clear layouts, visual systems, and responsive experiences shaped around people.</p></div><div><span>02</span><h3>Content creation</h3><p>Posters, reels, motion graphics, branding, and event communication with a point of view.</p></div><div><span>03</span><h3>Editing & frontend</h3><p>Video editing and polished interfaces brought together with rhythm, detail, and purpose.</p></div></div>
+        </section>
+
+        <section className="skills section" aria-labelledby="skills-heading">
+          <div className="section-heading"><p className="eyebrow">Tools of the trade</p><h2 id="skills-heading">Made with<br /><em>the right tools.</em></h2></div>
+          <div className="skills-grid">
+            {skills.map((skill) => (
+              <div className="skill-item" key={skill.name}>
+                <div className={`app-icon ${skill.className}`} aria-hidden="true"><span>{skill.shortName}</span></div>
+                <div><h3>{skill.name}</h3><p>{skill.group}</p></div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="experience section" id="experience" aria-labelledby="experience-heading">
+          <div className="section-heading"><p className="eyebrow">Experience</p><h2 id="experience-heading">Learning by<br /><em>making.</em></h2></div>
+          <div className="experience-row"><span className="experience-date">2024—25</span><div><h3>Creative Media Editor & Program Coordinator</h3><p>BGS College · MBA Department</p></div><p>Promotional video, social content, posters, and event materials across an 11-month engagement.</p></div>
+          <div className="experience-row"><span className="experience-date">2025</span><div><h3>Frontend Developer Intern</h3><p>Doctor Java Technologies</p></div><p>Built Meal Finder, a responsive interface for discovering recipes through live API data.</p></div>
         </section>
 
         {activeProject && (
@@ -180,10 +217,10 @@ function App() {
         <section className="about section" id="about" aria-labelledby="about-heading">
           <p className="eyebrow">A little about me</p>
           <div className="about-content">
-            <div className="portrait photo"><img src={portraitImage} alt="Lohith D smiling" /></div>
+            <div className="portrait photo"><img src={portraitImage} alt="Lohith D smiling" loading="lazy" /></div>
             <div>
-              <h2 id="about-heading">Visual storyteller, maker, and detail-led problem solver.</h2>
-              <p className="body-copy">I’m Lohith, a BCA graduate who works across video editing, motion graphics, branding, and frontend development. I enjoy combining creativity and technology to make digital experiences that are clear, engaging, and useful.</p>
+              <h2 id="about-heading">I work where the timeline meets the browser.</h2>
+              <p className="body-copy">I’m Lohith, a BCA graduate from Bengaluru. My work moves between editing a frame, shaping a brand moment, and building the interface that carries it. I care about clear communication, useful details, and making things people want to spend time with.</p>
               <a className="text-link" href="#contact-form">Get in touch <ArrowIcon /></a>
             </div>
           </div>
