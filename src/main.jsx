@@ -186,6 +186,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
   const [contactPage, setContactPage] = useState(window.location.hash === '#contact-form');
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleHashChange = () => setContactPage(window.location.hash === '#contact-form');
@@ -193,12 +194,29 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  useEffect(() => {
+    const handlePointerMove = (event) => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 26;
+      const y = (event.clientY / window.innerHeight - 0.5) * 26;
+      setPointer({ x, y });
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, []);
+
   if (contactPage) return <ContactPage />;
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="site-shell">
+    <div
+      className="site-shell"
+      style={{
+        '--pointer-x': `${pointer.x}px`,
+        '--pointer-y': `${pointer.y}px`
+      }}
+    >
       <div className="ambient-bg" aria-hidden="true"><span className="orb orb-one"></span><span className="orb orb-two"></span><span className="orb orb-three"></span><span className="grid-noise"></span></div>
       <header className="topbar">
         <a className="logo" href="#top" onClick={closeMenu} aria-label="Lohith D home">LD<span>.</span></a>
