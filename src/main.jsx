@@ -45,7 +45,7 @@ const skillGroups = [
 
 const experience = [
   {
-    period: '2024 — 2025',
+    period: '2025 — 2026',
     role: 'Creative Media Editor & Program Coordinator',
     company: 'BGS College of Engineering and Technology · MBA Department',
     description: 'Edited 30+ promotional videos, reels and branding assets while managing promotional activities, event coordination and creative campaigns.',
