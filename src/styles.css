@@ -737,6 +737,23 @@ svg {
   border-bottom: 1px solid var(--line);
 }
 
+.timeline-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.timeline-image {
+  width: 180px;
+  height: 104px;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 30px rgba(2, 8, 16, 0.28);
+}
+
 .timeline-period {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.62rem;
@@ -1298,6 +1315,16 @@ svg {
   .timeline-item {
     grid-template-columns: 1fr;
     gap: 0.7rem;
+  }
+
+  .timeline-meta {
+    gap: 0.7rem;
+  }
+
+  .timeline-image {
+    width: 100%;
+    max-width: 320px;
+    height: 150px;
   }
 
   .project-grid,

@@ -48,13 +48,15 @@ const experience = [
     period: '2024 — 2025',
     role: 'Creative Media Editor & Program Coordinator',
     company: 'BGS College of Engineering and Technology · MBA Department',
-    description: 'Edited 30+ promotional videos, reels and branding assets while managing promotional activities, event coordination and creative campaigns.'
+    description: 'Edited 30+ promotional videos, reels and branding assets while managing promotional activities, event coordination and creative campaigns.',
+    image: skillCreativeImage
   },
   {
     period: '2025',
     role: 'Frontend Developer Intern',
     company: 'Doctor Java Technologies',
-    description: 'Developed a responsive Meal Finder website with live API integration, search, filters and recipe detail experiences.'
+    description: 'Developed a responsive Meal Finder website with live API integration, search, filters and recipe detail experiences.',
+    image: skillDevelopmentImage
   }
 ];
 
@@ -426,7 +428,10 @@ function App() {
           <div className="timeline">
             {experience.map((item) => (
               <div className="timeline-item" key={item.role}>
-                <span className="timeline-period">{item.period}</span>
+                <div className="timeline-meta">
+                  <span className="timeline-period">{item.period}</span>
+                  <img className="timeline-image" src={item.image} alt={`${item.role} creative work`} loading="lazy" />
+                </div>
                 <div className="timeline-content">
                   <h3>{item.role}</h3>
                   <p className="company-name">{item.company}</p>
