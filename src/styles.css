@@ -771,7 +771,7 @@ svg {
 
 .company-name {
   margin: 0 0 0.7rem;
-  color: var(--cyan);
+  color: #ff5d5d;
   font-weight: 600;
 }
 
