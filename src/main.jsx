@@ -30,7 +30,7 @@ const skillGroups = [
   {
     icon: '💻',
     title: 'Development',
-    skills: ['HTML', 'CSS', 'JavaScript', 'Python', 'MySQL'],
+    skills: ['HTML', 'CSS', 'JavaScript'],
     accent: 'amber',
     image: skillDevelopmentImage
   },
@@ -331,7 +331,7 @@ function App() {
 
           <div className="hero-grid">
             <div className="hero-copy">
-              <p className="kicker">Creative Media Editor | Video Editor | Frontend Developer | Digital Creator</p>
+              <p className="kicker">Creative Media Editor | Video Editor | Digital Creator</p>
               <h1>
                 LOHITH D
                 <span>
