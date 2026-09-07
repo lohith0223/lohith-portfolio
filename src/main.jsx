@@ -1,9 +1,14 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
-import portraitImage from './assets/lohith-portrait.jpg';
-import heroPortrait from './assets/20251020_064102.jpg.jpeg';
 import resumePdf from './assets/Lohith D Resume.pdf';
+import aboutPortrait from './assets/about-portrait.webp';
+import heroPortraitOptimized from './assets/hero-portrait.webp';
+import projectLibraryImage from './assets/project-library.webp';
+import projectMealImage from './assets/project-meal.webp';
+import galleryMotionImage from './assets/gallery-motion.webp';
+import galleryBrandingImage from './assets/gallery-branding.webp';
+import galleryPhotographyImage from './assets/gallery-photography.webp';
 import skillVideoImage from './assets/skill-video.jpg';
 import skillDesignImage from './assets/skill-design.jpg';
 import skillDevelopmentImage from './assets/skill-development.jpg';
@@ -66,7 +71,7 @@ const projects = [
     title: 'Online Library Management System',
     tags: ['Python', 'Django', 'MySQL', 'HTML', 'CSS', 'JavaScript', 'jQuery'],
     summary: 'A complete library platform with secure admin/student roles, book management, issue/return tracking, fine calculation, and smart search.',
-    image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=85',
+    image: projectLibraryImage,
     details: [
       'Role-based authentication for admin and student users.',
       'Book catalog management, issue and return workflows, notifications and fine tracking.',
@@ -79,7 +84,7 @@ const projects = [
     title: 'Meal Finder Website',
     tags: ['API Integration', 'Responsive UI', 'JavaScript', 'Search & Filters'],
     summary: 'A clean, responsive meal discovery experience designed around search, filtering and recipe exploration.',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85',
+    image: projectMealImage,
     details: [
       'Live recipe data integration with category-based filtering.',
       'Responsive layout and detail cards built for mobile-first browsing.',
@@ -94,19 +99,19 @@ const gallery = [
     label: 'Reels',
     title: 'Motion stories',
     tone: 'cyan',
-    image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1000&q=85'
+    image: galleryMotionImage
   },
   {
     label: 'Branding',
     title: 'Campaign visuals',
     tone: 'violet',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=1000&q=85'
+    image: galleryBrandingImage
   },
   {
     label: 'Photography',
     title: 'Frames from life',
     tone: 'amber',
-    image: 'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=1000&q=85'
+    image: galleryPhotographyImage
   }
 ];
 
@@ -354,7 +359,7 @@ function App() {
 
             <div className="hero-visual" aria-label="Portrait of Lohith D">
               <div className="hero-portrait-wrap">
-                <img className="hero-portrait" src={heroPortrait} alt="Lohith D outdoors" />
+                <img className="hero-portrait" src={heroPortraitOptimized} alt="Lohith D outdoors" width="900" height="900" fetchPriority="high" />
               </div>
             </div>
           </div>
@@ -371,7 +376,7 @@ function App() {
 
           <div className="about-grid">
             <div className="portrait-card">
-              <img src={portraitImage} alt="Lohith D smiling" loading="lazy" />
+              <img src={aboutPortrait} alt="Lohith D smiling" loading="lazy" width="800" height="800" />
             </div>
 
             <div className="about-copy">
